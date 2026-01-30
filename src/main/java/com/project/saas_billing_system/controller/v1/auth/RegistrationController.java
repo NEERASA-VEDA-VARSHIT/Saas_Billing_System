@@ -1,0 +1,25 @@
+package com.project.saas_billing_system.controller.v1.auth;
+
+import com.project.saas_billing_system.dto.auth.RegisterRequest;
+import com.project.saas_billing_system.model.identity.User;
+import com.project.saas_billing_system.service.auth.AuthService;
+import com.project.saas_billing_system.util.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class RegistrationController {
+
+    private final AuthService authService;
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<User>> register(@Valid @RequestBody RegisterRequest request) {
+        User user = authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("User registered", user));
+    }
+}
