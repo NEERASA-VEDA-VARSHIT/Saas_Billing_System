@@ -15,6 +15,5 @@ public class AnalyticsEventConsumer {
     @KafkaListener(topics = KafkaTopics.ANALYTICS_EVENTS, groupId = "${spring.kafka.consumer.group-id:saas-billing-group}")
     public void consume(AnalyticsEvent event) {
         log.info("Received analytics event: {} for org {}", event.getMetricName(), event.getOrganizationId());
-        // Persist or aggregate usage for billing
     }
 }

@@ -1,274 +1,157 @@
-Perfect — below is a **clean, professional, portfolio-grade `README.md`** you can directly put in your GitHub repo.
-This README is written the way **real SaaS backend projects** are documented and is **viva + recruiter friendly**.
+# SaaS Billing Platform
 
-You can copy–paste this **as-is**.
-
----
-
-# 🚀 SaaS Billing Platform
-
-**Production-grade SaaS billing and subscription management backend built using Spring Boot**
+Production-grade SaaS billing and subscription management backend built with Spring Boot.
 
 ---
 
-## 📌 Overview
+## Overview
 
-The **SaaS Billing Platform** is a backend system designed to manage **subscriptions, billing cycles, payments, invoices, and analytics** for SaaS-based products.
-It simulates a **real-world, enterprise-grade billing system** similar to Stripe or Razorpay Subscriptions.
-
-This project is built as part of a **Backend Engineering (Spring Boot)** final term project and follows **industry best practices** in architecture, security, and scalability.
+The SaaS Billing Platform is a backend system for managing subscriptions, billing cycles, payments, invoices, organizations, and analytics. It includes JWT authentication, file upload, email notifications, rate limiting, caching, pagination, sorting, filtering, complex queries, and OpenAPI documentation.
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
-| Layer          | Technology                   |
-| -------------- | ---------------------------- |
-| Language       | **Java**                     |
-| Framework      | **Spring Boot 3.5.10**       |
-| Build Tool     | **Maven**                    |
-| API Style      | REST                         |
-| Authentication | JWT (OAuth2 Resource Server) |
-| Database       | PostgreSQL                   |
-| ORM            | Spring Data JPA (Hibernate)  |
-| Messaging      | Apache Kafka                 |
-| Caching        | Spring Cache (Redis-ready)   |
-| Email          | Java Mail Sender             |
-| Monitoring     | Spring Boot Actuator         |
-| Documentation  | Swagger / OpenAPI            |
-| Config Format  | YAML                         |
-| Packaging      | JAR                          |
+| Layer           | Technology                    |
+|----------------|-------------------------------|
+| Language       | Java 17 / 21                  |
+| Framework      | Spring Boot 3.x               |
+| Build          | Maven                         |
+| API            | REST                          |
+| Auth           | JWT (Bearer)                  |
+| Database       | H2 (default), PostgreSQL/Neon|
+| ORM            | Spring Data JPA (Hibernate)   |
+| Messaging      | Apache Kafka                  |
+| Caching        | Spring Cache (in-memory)      |
+| Email          | JavaMailSender (SMTP)         |
+| Docs           | Springdoc OpenAPI (Swagger)   |
+| Config         | YAML                          |
 
 ---
 
-## 📦 Project Metadata
+## Project Metadata
 
-| Field            | Value                                                                                     |
-| ---------------- | ----------------------------------------------------------------------------------------- |
-| **Group**        | `com.project`                                                                             |
-| **Artifact**     | `saas-billing-system`                                                                     |
-| **Name**         | SaaS Billing Platform                                                                     |
-| **Description**  | Production-grade SaaS billing and subscription management backend built using Spring Boot |
-| **Package Name** | `com.project.saasbilling`                                                                 |
-| **Packaging**    | JAR                                                                                       |
-| **Java Version** | 17 / 21                                                                                   |
-
-> ⚠️ Note: Package names do not contain hyphens as per Java standards.
+| Field         | Value                                                |
+|---------------|------------------------------------------------------|
+| Group         | `com.project`                                        |
+| Artifact      | `saas-billing-system`                                |
+| Package       | `com.project.saas_billing_system`                   |
+| Packaging     | JAR                                                  |
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
-src/main/java/com/project/saasbilling
-│
-├── controller/        # REST Controllers
-├── service/           # Business logic
-├── repository/        # JPA repositories
-├── model/             # Entity classes
-├── dto/               # Request/Response DTOs
-├── config/            # Security, Kafka, Cache configs
-├── exception/         # Global exception handling
-├── event/             # Kafka events
-├── listener/          # Kafka consumers
-├── util/              # Utility classes
-└── scheduler/         # Scheduled jobs (billing cycles)
+src/main/java/com/project/saas_billing_system/
+├── config/          Security, Kafka, Cache, Rate limit, Swagger
+├── controller/v1/   REST: auth, organizations, subscriptions, invoices, payments, analytics, file, webhook
+├── service/         Business logic
+├── repository/      JPA repositories
+├── model/           Entities (identity, billing, subscription, analytics, webhook)
+├── dto/             Request/Response DTOs, PagedResponse
+├── event/           Kafka event payloads
+├── consumer/        Kafka consumers
+├── producer/        Kafka event producer
+├── exception/       GlobalExceptionHandler, custom exceptions
+└── util/            ApiResponse, SecurityUtils, DateUtils
 ```
 
-✔️ Follows clean layered architecture
-✔️ No business logic in controllers
+---
+
+## Features
+
+### Auth & Security
+
+- User registration and login
+- JWT token generation and validation
+- Protected APIs (Bearer token)
+- Role-based users (Organization-scoped)
+
+### Core APIs
+
+- **Organizations** – CRUD, list (paged & sorted)
+- **Subscriptions** – Plans, create, cancel, list by organization
+- **Invoices** – Create, get by id/number/organization, search (complex query, paged & sorted)
+- **Payments** – Create, get by id/organization, revenue summary (complex query)
+- **Analytics** – Usage by organization (period, timezone)
+- **File upload** – Upload and download (e.g. invoice attachments)
+- **Webhooks** – Payment webhook (no auth)
+
+### Advanced Features
+
+| Feature                  | Status |
+|--------------------------|--------|
+| Complex queries (JPQL)  | Yes – invoice search, revenue summary |
+| Pagination & sorting     | Yes – organizations list, invoice search |
+| Filtering                | Yes – status, date range on invoices/payments |
+| Caching                  | Yes – organizations, subscription plans |
+| File upload              | Yes – POST/GET /api/files |
+| Email notification       | Yes – JavaMailSender, Kafka-triggered |
+| API rate limiting        | Yes – per-IP, configurable window |
+| Analytics APIs           | Yes – GET /api/analytics/usage/{orgId} |
+| Global exception handling| Yes – GlobalExceptionHandler |
+| Input validation         | Yes – @Valid, bean validation on DTOs |
+| Swagger documentation    | Yes – /swagger-ui.html, /v3/api-docs |
+
+### Integrations
+
+- **Email SMTP** – Gmail SMTP (or other) in `application.yaml`
+- **Kafka** – Events for payment, subscription, notification, analytics
+- **Database** – H2 in-memory (default) or PostgreSQL/Neon (profile `postgres`)
 
 ---
 
-## 🔐 Security & Authentication
-
-* JWT-based authentication
-* Stateless security using **OAuth2 Resource Server**
-* Role-based access control:
-
-    * `ADMIN`
-    * `MERCHANT`
-    * `CUSTOMER`
-* Secured endpoints using Spring Security filters
-
----
-
-## 💳 Core Features
-
-### 👤 User Management
-
-* User registration
-* Login & JWT token generation
-* Role-based authorization
-
----
-
-### 📄 Subscription Management
-
-* Create subscription plans
-* Subscribe to a plan
-* Upgrade / downgrade plans
-* Cancel subscriptions
-* Auto-renewal handling
-
----
-
-### 🧾 Billing & Invoicing
-
-* Invoice generation per billing cycle
-* Payment status tracking
-* Billing history APIs
-* Invoice PDF upload & storage
-
----
-
-### 📊 Analytics APIs
-
-* Monthly recurring revenue (MRR)
-* Active subscriptions count
-* Revenue per plan
-* Churn-related metrics
-
----
-
-## ⚙️ Advanced Backend Features
-
-| Feature                      | Implemented |
-| ---------------------------- | ----------- |
-| Pagination & Sorting         | ✅           |
-| Filtering APIs               | ✅           |
-| Complex SQL queries          | ✅           |
-| Global Exception Handling    | ✅           |
-| Input Validation (DTO-level) | ✅           |
-| API Rate Limiting            | ✅           |
-| Caching (Redis-ready)        | ✅           |
-| Email Notifications          | ✅           |
-| Swagger Documentation        | ✅           |
-
----
-
-## 📡 Event-Driven Architecture (Kafka)
-
-Kafka is used to decouple critical operations:
-
-### Events
-
-* `PaymentSuccessEvent`
-* `InvoiceGeneratedEvent`
-* `SubscriptionCancelledEvent`
-
-### Consumers
-
-* Send email notifications
-* Update analytics
-* Trigger invoice generation
-
-This improves **scalability, fault tolerance, and system reliability**.
-
----
-
-## 🗄️ Database
-
-* **PostgreSQL**
-* Managed via Spring Data JPA
-* Indexed columns for performance
-* Supports complex analytical queries
-
----
-
-## 📧 Email System
-
-* Invoice emails
-* Payment confirmation
-* Subscription status notifications
-* Uses `JavaMailSender`
-
----
-
-## 📊 Monitoring & Observability
-
-* Spring Boot Actuator endpoints:
-
-    * `/actuator/health`
-    * `/actuator/metrics`
-    * `/actuator/info`
-
----
-
-## 📘 API Documentation
-
-* Swagger UI (OpenAPI)
-* Interactive API testing
-* JWT-secured endpoints documented
-
-> Swagger URL available after application startup
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-* Java 17 or 21
-* Maven
-* PostgreSQL
-* Kafka (local or Docker)
+- Java 17 or 21
+- Maven
+- Kafka (optional; for event consumers)
+- PostgreSQL or Neon (optional; use profile `postgres`)
 
----
-
-### Run Locally
+### Run
 
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
 
-**Mail / secrets (not in repo):**  
-Copy `application-local.yaml.example` to `application-local.yaml` in the project root and add your SMTP username, password, and `app.mail.from`. That file is gitignored. Or set env vars: `SPRING_MAIL_USERNAME`, `SPRING_MAIL_PASSWORD`, `APP_MAIL_FROM`.
+Default profile uses H2 in-memory; no DB or Kafka required for basic API testing.
+
+### Profiles
+
+- **default** – H2 in-memory, `data.sql` seeds subscription plans
+- **postgres** – PostgreSQL/Neon: set `SPRING_PROFILES_ACTIVE=postgres` and datasource env vars (see `application.yaml`)
+
+### Mail (optional)
+
+Copy `application-local.yaml.example` to `application-local.yaml` and set SMTP credentials, or configure `spring.mail.*` and `app.mail.from` in `application-local.yaml`. That file is gitignored.
+
+### API Testing
+
+- **Swagger UI:** `http://localhost:8080/swagger-ui.html`
+- **API docs:** `http://localhost:8080/v3/api-docs`
+- Step-by-step flow and sample requests: see **API_TESTING_GUIDE.md**
 
 ---
 
-## 🧪 Demonstration Includes
+## API Summary
 
-* JWT authentication flow
-* Protected APIs
-* Database persistence
-* Kafka event processing
-* Email sending
-* Analytics APIs
-* Rate limiting behavior
-
----
-
-## 🎯 Learning Outcomes
-
-* Real-world backend system design
-* Secure API development
-* Event-driven architecture
-* Database modeling & optimization
-* Production-ready Spring Boot practices
+| Area         | Endpoints |
+|-------------|-----------|
+| Auth        | POST /api/auth/register, POST /api/auth/login |
+| Organizations | GET/POST/PUT /api/organizations, GET /api/organizations/{id}, GET /api/organizations/slug/{slug} (list is paged & sorted) |
+| Subscriptions | GET /api/subscriptions/plans, POST/GET /api/subscriptions, GET /api/subscriptions/organization/{id}, POST /api/subscriptions/{id}/cancel |
+| Invoices    | GET /api/invoices/search (paged, sorted, filters), GET/POST /api/invoices, GET /api/invoices/organization/{id} |
+| Payments    | GET /api/payments/revenue-summary, GET/POST /api/payments, GET /api/payments/organization/{id} |
+| Analytics   | GET /api/analytics/usage/{organizationId} |
+| Files       | POST /api/files/upload, GET /api/files/download/{storedName} |
+| Webhooks    | POST /api/webhooks/payment (no auth) |
 
 ---
 
-## 📌 Author
-
-**Veda Varshit**
-Backend Engineering – Spring Boot
-
----
-
-## 📄 License
+## License
 
 This project is for educational and portfolio purposes.
-
----
-
-If you want, next I can:
-
-* 🔹 Add **ER diagram**
-* 🔹 Add **API list table**
-* 🔹 Add **Kafka flow diagram**
-* 🔹 Prepare **viva Q&A**
-* 🔹 Convert this into **FAANG-style README**
-
-Just tell me what you want next.

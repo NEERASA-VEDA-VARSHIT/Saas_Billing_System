@@ -5,6 +5,7 @@ import com.project.saas_billing_system.dto.identity.UserResponse;
 import com.project.saas_billing_system.model.identity.User;
 import com.project.saas_billing_system.service.auth.AuthService;
 import com.project.saas_billing_system.util.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class RegistrationController {
     private final AuthService authService;
 
     @PostMapping("/register")
+    @SecurityRequirements
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest request) {
         User user = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success("User registered", toResponse(user)));

@@ -3,6 +3,11 @@ spring:
     import: optional:file:./application-local.yaml
   application:
     name: saas-billing-system
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
   jpa:
     hibernate:
       ddl-auto: update
@@ -31,6 +36,9 @@ springdoc:
   show-actuator: false
 
 app:
+  upload:
+    dir: ./uploads
+    max-file-size: 10MB
   mail:
     from: 2024eb02265@online.bits-pilani.ac.in
   jwt:
@@ -42,7 +50,6 @@ app:
     window-seconds: 60
 
 ---
-# Default / dev: H2 in-memory
 spring:
   config:
     activate:
@@ -57,15 +64,15 @@ spring:
       enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
 
 ---
-# PostgreSQL: use when you have a running Postgres (e.g. -Dspring.profiles.active=postgres)
 spring:
   config:
     activate:
       on-profile: postgres
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/saas_billing}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/saas_billing?sslmode=require}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver

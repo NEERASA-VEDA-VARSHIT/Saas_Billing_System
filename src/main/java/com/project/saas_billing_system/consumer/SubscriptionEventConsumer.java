@@ -15,6 +15,5 @@ public class SubscriptionEventConsumer {
     @KafkaListener(topics = KafkaTopics.SUBSCRIPTION_EVENTS, groupId = "${spring.kafka.consumer.group-id:saas-billing-group}")
     public void consume(SubscriptionEvent event) {
         log.info("Received subscription event: {} for org {}", event.getSubscriptionId(), event.getOrganizationId());
-        // Handle subscription event (e.g. provision access, send welcome email)
     }
 }

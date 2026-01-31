@@ -1,12 +1,15 @@
 package com.project.saas_billing_system.service.billing;
 
 import com.project.saas_billing_system.dto.billing.InvoiceResponse;
+import com.project.saas_billing_system.dto.common.PagedResponse;
 import com.project.saas_billing_system.exception.ResourceNotFoundException;
 import com.project.saas_billing_system.model.billing.Invoice;
 import com.project.saas_billing_system.model.billing.InvoiceStatus;
 import com.project.saas_billing_system.repository.billing.InvoiceRepository;
 import com.project.saas_billing_system.service.identity.OrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +49,21 @@ public class InvoiceService {
         return invoiceRepository.findByOrganizationId(organizationId).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<InvoiceResponse> searchInvoices(Long organizationId, InvoiceStatus status, Instant dueFrom, Instant dueTo, Pageable pageable) {
+        organizationService.getById(organizationId);
+        Page<Invoice> page = invoiceRepository.findInvoicesByOrganizationAndFilters(organizationId, status, dueFrom, dueTo, pageable);
+        return PagedResponse.<InvoiceResponse>builder()
+                .content(page.getContent().stream().map(this::toResponse).collect(Collectors.toList()))
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .number(page.getNumber())
+                .size(page.getSize())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
     }
 
     @Transactional

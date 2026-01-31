@@ -6,10 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * In-memory rate limiter using a fixed window per client key (e.g. IP).
- * For production at scale, consider Redis-based rate limiting (e.g. Bucket4j + Redis).
- */
 @Component
 public class RateLimitStore {
 
@@ -22,9 +18,6 @@ public class RateLimitStore {
         this.windowSecondsMs = properties.getWindowSeconds() * 1000L;
     }
 
-    /**
-     * Tries to acquire a permit for the given key. Returns true if within limit, false if rate exceeded.
-     */
     public boolean tryAcquire(String key) {
         if (!properties.isEnabled()) {
             return true;

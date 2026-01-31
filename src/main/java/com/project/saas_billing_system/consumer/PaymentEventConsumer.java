@@ -15,6 +15,5 @@ public class PaymentEventConsumer {
     @KafkaListener(topics = KafkaTopics.PAYMENT_EVENTS, groupId = "${spring.kafka.consumer.group-id:saas-billing-group}")
     public void consume(PaymentEvent event) {
         log.info("Received payment event: {} for org {}", event.getPaymentReference(), event.getOrganizationId());
-        // Handle payment event (e.g. update invoice, send notification)
     }
 }

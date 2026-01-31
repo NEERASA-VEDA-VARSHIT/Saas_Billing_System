@@ -1,6 +1,7 @@
 package com.project.saas_billing_system.service.billing;
 
 import com.project.saas_billing_system.dto.billing.PaymentResponse;
+import com.project.saas_billing_system.dto.billing.RevenueSummaryResponse;
 import com.project.saas_billing_system.event.PaymentEvent;
 import com.project.saas_billing_system.exception.ResourceNotFoundException;
 import com.project.saas_billing_system.model.billing.Payment;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,6 +40,19 @@ public class PaymentService {
         return paymentRepository.findByOrganizationId(organizationId).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public RevenueSummaryResponse getRevenueSummary(Long organizationId, Instant fromDate, Instant toDate) {
+        organizationService.getById(organizationId);
+        BigDecimal total = paymentRepository.sumCompletedPaymentsByOrganizationAndDateRange(organizationId, fromDate, toDate);
+        return RevenueSummaryResponse.builder()
+                .organizationId(organizationId)
+                .totalRevenue(total != null ? total : BigDecimal.ZERO)
+                .fromDate(fromDate)
+                .toDate(toDate)
+                .currency("USD")
+                .build();
     }
 
     @Transactional
