@@ -1,5 +1,6 @@
 package com.project.saas_billing_system.controller.v1.subscription.subscription;
 
+import com.project.saas_billing_system.dto.subscription.SubscriptionPlanResponse;
 import com.project.saas_billing_system.dto.subscription.SubscriptionRequest;
 import com.project.saas_billing_system.dto.subscription.SubscriptionResponse;
 import com.project.saas_billing_system.model.subscription.SubscriptionPlan;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/subscriptions")
@@ -22,8 +24,23 @@ public class SubscriptionController {
     private final SubscriptionPlanService planService;
 
     @GetMapping("/plans")
-    public ResponseEntity<ApiResponse<List<SubscriptionPlan>>> listPlans() {
-        return ResponseEntity.ok(ApiResponse.success(planService.getActivePlans()));
+    public ResponseEntity<ApiResponse<List<SubscriptionPlanResponse>>> listPlans() {
+        List<SubscriptionPlanResponse> list = planService.getActivePlans().stream()
+                .map(this::toPlanResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success(list));
+    }
+
+    private SubscriptionPlanResponse toPlanResponse(SubscriptionPlan plan) {
+        return SubscriptionPlanResponse.builder()
+                .id(plan.getId())
+                .name(plan.getName())
+                .description(plan.getDescription())
+                .price(plan.getPrice())
+                .billingCycle(plan.getBillingCycle())
+                .trialDays(plan.getTrialDays())
+                .active(plan.isActive())
+                .build();
     }
 
     @PostMapping

@@ -2,6 +2,7 @@ package com.project.saas_billing_system.model.billing;
 
 import com.project.saas_billing_system.model.base.AuditableEntity;
 import com.project.saas_billing_system.model.identity.Organization;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "payments")
+@Schema(hidden = true)
 public class Payment extends AuditableEntity {
 
     @Column(nullable = false, unique = true)

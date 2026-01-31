@@ -1,6 +1,7 @@
 package com.project.saas_billing_system.model.subscription;
 
 import com.project.saas_billing_system.model.base.AuditableEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "subscription_plans")
+@Schema(hidden = true)
 public class SubscriptionPlan extends AuditableEntity {
 
     @Column(nullable = false, unique = true)

@@ -1,5 +1,6 @@
 package com.project.saas_billing_system.model.base;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @MappedSuperclass
+@Schema(hidden = true)
 public abstract class AuditableEntity extends BaseEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)

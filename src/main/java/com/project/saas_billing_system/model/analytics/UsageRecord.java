@@ -2,6 +2,7 @@ package com.project.saas_billing_system.model.analytics;
 
 import com.project.saas_billing_system.model.base.AuditableEntity;
 import com.project.saas_billing_system.model.identity.Organization;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "usage_records")
+@Schema(hidden = true)
 public class UsageRecord extends AuditableEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

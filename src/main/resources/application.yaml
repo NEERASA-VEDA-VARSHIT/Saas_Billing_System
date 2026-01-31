@@ -12,10 +12,10 @@ spring:
     consumer:
       group-id: saas-billing-group
   mail:
-    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
-    port: ${SPRING_MAIL_PORT:587}
-    username: ${SPRING_MAIL_USERNAME:}
-    password: ${SPRING_MAIL_PASSWORD:}
+    host: smtp.gmail.com
+    port: 587
+    username: 2024eb02265@online.bits-pilani.ac.in
+    password: kpaemnijrjbyzvgw
     properties:
       mail:
         smtp:
@@ -23,9 +23,16 @@ spring:
           starttls:
             enable: true
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.project.saas_billing_system.controller
+  paths-to-match: /api/**
+  show-actuator: false
+
 app:
   mail:
-    from: ${APP_MAIL_FROM:}
+    from: 2024eb02265@online.bits-pilani.ac.in
   jwt:
     secret: ${JWT_SECRET:defaultSecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLong}
     expiration-ms: 86400000

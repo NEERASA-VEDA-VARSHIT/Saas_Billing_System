@@ -1,5 +1,6 @@
 package com.project.saas_billing_system.controller.v1.billing;
 
+import com.project.saas_billing_system.dto.billing.PaymentCreateRequest;
 import com.project.saas_billing_system.dto.billing.PaymentResponse;
 import com.project.saas_billing_system.service.billing.PaymentService;
 import com.project.saas_billing_system.util.ApiResponse;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -28,12 +28,12 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<PaymentResponse>> create(@RequestBody Map<String, Object> body) {
-        Long orgId = Long.valueOf(body.get("organizationId").toString());
-        Long invoiceId = body.get("invoiceId") != null ? Long.valueOf(body.get("invoiceId").toString()) : null;
-        java.math.BigDecimal amount = body.get("amount") != null ? new java.math.BigDecimal(body.get("amount").toString()) : null;
-        String currency = (String) body.get("currency");
-        String paymentMethod = (String) body.get("paymentMethod");
-        return ResponseEntity.status(201).body(ApiResponse.success(paymentService.create(orgId, invoiceId, amount, currency, paymentMethod)));
+    public ResponseEntity<ApiResponse<PaymentResponse>> create(@RequestBody PaymentCreateRequest request) {
+        return ResponseEntity.status(201).body(ApiResponse.success(paymentService.create(
+                request.getOrganizationId(),
+                request.getInvoiceId(),
+                request.getAmount(),
+                request.getCurrency(),
+                request.getPaymentMethod())));
     }
 }

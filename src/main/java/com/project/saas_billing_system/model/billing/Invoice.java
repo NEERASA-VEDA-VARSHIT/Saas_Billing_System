@@ -3,6 +3,7 @@ package com.project.saas_billing_system.model.billing;
 import com.project.saas_billing_system.model.base.AuditableEntity;
 import com.project.saas_billing_system.model.identity.Organization;
 import com.project.saas_billing_system.model.subscription.Subscription;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "invoices")
+@Schema(hidden = true)
 public class Invoice extends AuditableEntity {
 
     @Column(nullable = false, unique = true)

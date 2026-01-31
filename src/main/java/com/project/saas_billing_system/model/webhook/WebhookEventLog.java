@@ -1,6 +1,7 @@
 package com.project.saas_billing_system.model.webhook;
 
 import com.project.saas_billing_system.model.base.AuditableEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "webhook_event_logs")
+@Schema(hidden = true)
 public class WebhookEventLog extends AuditableEntity {
 
     @Column(nullable = false)

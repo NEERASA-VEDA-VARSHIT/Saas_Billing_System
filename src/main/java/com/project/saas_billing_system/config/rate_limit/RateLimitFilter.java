@@ -18,6 +18,12 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final RateLimitStore rateLimitStore;
 
     @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/actuator");
+    }
+
+    @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -25,7 +31,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
         if (!rateLimitStore.tryAcquire(clientKey)) {
             log.warn("Rate limit exceeded for client: {}", clientKey);
-            response.setStatus(HttpServletResponse.SC_TOO_MANY_REQUESTS);
+            response.setStatus(429); // 429 Too Many Requests
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write("{\"success\":false,\"message\":\"Too many requests. Please try again later.\"}");

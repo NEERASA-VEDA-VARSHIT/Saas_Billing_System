@@ -1,6 +1,7 @@
 package com.project.saas_billing_system.model.identity;
 
 import com.project.saas_billing_system.model.base.AuditableEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +13,14 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
+@Schema(hidden = true)
 public class User extends AuditableEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
+    @Schema(hidden = true)
     private String passwordHash;
 
     @Column(nullable = false)
@@ -39,5 +42,6 @@ public class User extends AuditableEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
+    @Schema(hidden = true)
     private Organization organization;
 }

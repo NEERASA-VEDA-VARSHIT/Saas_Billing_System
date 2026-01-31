@@ -1,6 +1,7 @@
 package com.project.saas_billing_system.model.identity;
 
 import com.project.saas_billing_system.model.base.AuditableEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "organizations")
+@Schema(hidden = true)
 public class Organization extends AuditableEntity {
 
     @Column(nullable = false, unique = true)
@@ -30,5 +32,6 @@ public class Organization extends AuditableEntity {
     private boolean active = true;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Schema(hidden = true)
     private List<User> users = new ArrayList<>();
 }
